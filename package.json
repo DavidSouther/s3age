@@ -1,0 +1,11 @@
+{
+  "name": "S3age",
+  "version": "0.0.1",
+  "author": "David Souther <http://davidsouther.com>",
+  "devDependencies": {
+    "grunt-contrib-coffee": "~0.7.0",
+    "grunt": "~0.4.1",
+    "grunt-contrib-clean": "~0.4.1",
+    "grunt-contrib-watch": "~0.4.4"
+  }
+}

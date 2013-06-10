@@ -11,6 +11,7 @@ module.exports = (grunt)->
 						'src/stage.coffee'
 						'src/camera.coffee'
 						'src/renderer.coffee'
+						'src/click.coffee'
 					]
 				options:
 					bare: true

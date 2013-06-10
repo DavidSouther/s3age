@@ -8,12 +8,12 @@ module.exports = (grunt)->
 			src:
 				files:
 					'lib/s3age.js': [
+						'src/stage.coffee'
 						'src/camera.coffee'
 						'src/renderer.coffee'
-						'src/stage.coffee'
 					]
 				options:
-					bare: false
+					bare: true
 		watch:
 			client:
 				files: [

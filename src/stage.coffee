@@ -20,11 +20,20 @@ class S3age
 		# attach the render-supplied DOM element
 		container.appendChild @renderer.domElement
 
+		# Set up a window resize handler
 		window.addEventListener 'resize', resize = =>
 			size()
 			@camera.resize()
 			@renderer.resize()
 		resize()
+
+		# Register a click handler that implicitly calls onclick of any clicked object.
+		# That is, any object with an onclick function in the stage's scene graph is
+		# "clickable" implicitly.
+		@clicked = (intersects)->
+			for intersect in intersects
+				intersect.object.onclick? intersect
+		S3age.Click container,  @
 
 		# The render loop and render clock
 		do update = =>

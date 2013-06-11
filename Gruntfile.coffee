@@ -17,9 +17,7 @@ module.exports = (grunt)->
 					bare: true
 		watch:
 			client:
-				files: [
-					'src/*coffee'
-				],
+				files: ['src/*coffee']
 				tasks: ['build']
 
 	grunt.loadNpmTasks 'grunt-contrib-coffee'

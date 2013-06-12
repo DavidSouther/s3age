@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF8" />
+	<title>Blender Factory</title>
+	<style type="text/css">
+		body {
+			margin: 0;
+			overflow: hidden;
+		}
+		#stage {
+			position: absolute;
+			background: black;
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+
+	<script src="../../vendors/three.js"></script><!-- The base THREEjs library -->
+	<script src="../../vendors/three/TrackballControls.js"></script><!-- Controls to spin the camera around a point. -->
+	<script src="../../lib/s3age.js"></script><!-- The stage manager. -->
+	<script>
+		/**
+		 * Shorthand for getting a vector in 3-space
+		 */
+		function vec(x, y, z){
+			return new THREE.Vector3(x, y, z);
+		}
+	</script>
+</head>
+<body>
+	<div id="stage" /><!-- The div to hold the WebGL context. -->
+	<script>
+		// Get a stage, attached to the DOM, rendering immediately.
+		var stage = new S3age("#stage", true, true);
+
+		// Add various scene pieces to the stage.
+		bindControls(stage);
+		buildTrees(stage);
+		addLights(stage);
+
+		function bindControls(stage) {
+			stage.camera.position = vec(0, 0, 500);
+			// Assign the controls to `stage.controls`,
+			// so the stage knows how to update the camera during the render loop.
+			stage.controls = new THREE.TrackballControls(stage.camera, stage.renderer.domElement);
+		}
+
+		function buildTrees(stage) {
+			// Fog makes further things less visibly clear.
+			stage.scene.fog = new THREE.FogExp2( 0x333333, 0.002 );
+
+			// Every drawn object has a geometry and a material
+			// The geometry describes its structure in space
+			// This, in particular, is a cylinder with a tapered point. http://threejs.org/docs/58/#Reference/Extras.Geometries/CylinderGeometry
+			var geometry = new THREE.CylinderGeometry( 0, 10, 30, 4, 1 );
+			// A phong material descrbies a technique for lighting 3-d objects, with appropriate "shininess"
+			// See http://en.wikipedia.org/wiki/Phong_shading
+			var material =  new THREE.MeshPhongMaterial( { color: 0x33EE33 } );
+
+			// Let's make 500 of these guys!
+			// for ( var i = 0; i < 500; i ++ ) {
+			for ( var i = 0; i < 20; i ++ ) {
+				// THREE.Mesh combines a geometry and material to render in the scene
+				var tree = new THREE.Mesh( geometry, material ); 
+
+				// Every Object3D (of which Mesh is a subclass) has several descriptions
+				// of its spatial orientation. This is the <x, y, z> position, spreading
+				// the trees roughly uniformly in a 1000 by 1000 by 1000 box, centered at the origin
+				tree.position = vec(
+					( Math.random() - 0.5 ) * 1000,
+					( Math.random() - 0.5 ) * 1000,
+					( Math.random() - 0.5 ) * 1000
+				);
+
+				// Rotations are a bit tricky.
+				// In this example, we use Euler angles to tweak pitch (X), roll (Z), and yaw (Y)
+				// https://en.wikipedia.org/wiki/File:Yaw_Axis_Corrected.svg
+				// Wobble the point along the two "flat" planes, so they look like they're all pointing different ups.
+				var qPI = Math.PI/4;
+				tree.eulerOrder = "XZY";
+				tree.rotation = vec(
+					// Spin up to a quarter turn, so they all have differnt "faces" showing
+					// Constrain the rotation to within a half-angle
+					0, //(Math.random() - qPI) * qPI,
+					0, //(Math.random() - qPI) * qPI
+					(Math.random()) * qPI
+				);
+
+				// Then, just add it in!
+				stage.scene.add( tree );
+			}
+		}
+
+		function addLights(stage) {
+			var light;
+			// Directional light is equivalent to a light source at an infinite distance,
+			// shining parallel rays. The sun is a directional light source.
+			// The direction points on the normal aimed from its position to the origin.
+
+			// A hard white light (Lights all color components equally) (Only MeshPhongMaterial objects)
+			// http://threejs.org/docs/58/#Reference/Lights/DirectionalLight
+			light = new THREE.DirectionalLight( 0xffffff );
+			light.position.set( 1, 1, 1 );
+			stage.scene.add( light );
+
+			// PointLights emanate from 
+			// A blueish light (Lights bluer objects preferentially)
+			light = new THREE.PointLight( 0x002288 );
+			light.position.set( -100, -100, -100 );
+			stage.scene.add( light );
+
+			// Ambient lights all objects and faces equally.
+			// http://threejs.org/docs/58/#Reference/Lights/AmbientLight
+			light = new THREE.AmbientLight( 0x222222 );
+			stage.scene.add( light );
+		}
+	</script>
+</body>

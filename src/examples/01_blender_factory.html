@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF8" />
+	<title>Blender Factory</title>
+	<style type="text/css">
+		/* Basic marginalia - hide off-page things. */
+		body {
+			margin: 0;
+			overflow: hidden;
+		}
+		/* The stage itself fills the entire available frame. */
+		#stage {
+			position: absolute;
+			background: gray; /* Soft gray background, for some contrast in "black" (unlit) objects. */
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+
+	<script src="../../vendors/three.js"></script><!-- The base THREEjs library -->
+	<script src="../../vendors/three/TrackballControls.js"></script><!-- Controls to spin the camera around a point. -->
+	<script src="../../lib/s3age.js"></script><!-- The stage manager. -->
+</head>
+<body>
+	<div id="stage" /><!-- The div to hold the WebGL context. -->
+	<script>
+		// Get a stage, attached to the DOM, rendering immediately.
+		var stage = new S3age("#stage");
+
+		// Set the camera back, up, and to the left
+		stage.camera.position = new THREE.Vector3(-3, 3, 4);
+
+		// Build a new box.
+		// A renderable Three.js is almost always a THREE.Mesh, which has a geometry and a material.
+		stage.scene.add(
+			new THREE.Mesh(
+				new THREE.CubeGeometry( 1, 1, 1 ), // Args are edge sizes
+				new THREE.MeshLambertMaterial() // A mildly shiny white-ish material
+			)
+		);
+
+		// A Point light sends light rays out in every direction.
+		var light = new THREE.PointLight( 0xFFFFFF );
+		// Move it above and to the side of the obect
+		light.position = new THREE.Vector3(4, 5, 1);
+		stage.scene.add( light );
+	</script>
+</body>

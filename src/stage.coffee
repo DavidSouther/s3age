@@ -1,9 +1,9 @@
 class S3age
 	constructor: (selector)->
 		# Public params
-		@camera = @renderer = @scene = undefined
+		@camera = @renderer = @scene = @controls = undefined
 		@scene = new THREE.Scene()
-		@running = no
+		@running = autostart
 		@FPS = 60
 
 		container = document.querySelector selector

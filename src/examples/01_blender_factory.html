@@ -30,6 +30,7 @@
 
 		// Set the camera back, up, and to the left
 		stage.camera.position.set(-3, 3, 4);
+		stage.camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 		// Build a new box.
 		// A renderable Three.js is almost always a THREE.Mesh, which has a geometry and a material.

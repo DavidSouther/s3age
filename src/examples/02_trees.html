@@ -19,14 +19,6 @@
 	<script src="../../vendors/three.js"></script><!-- The base THREEjs library -->
 	<script src="../../vendors/three/TrackballControls.js"></script><!-- Controls to spin the camera around a point. -->
 	<script src="../../lib/s3age.js"></script><!-- The stage manager. -->
-	<script>
-		/**
-		 * Shorthand for getting a vector in 3-space
-		 */
-		function vec(x, y, z){
-			return new THREE.Vector3(x, y, z);
-		}
-	</script>
 </head>
 <body>
 	<div id="stage" /><!-- The div to hold the WebGL context. -->
@@ -40,7 +32,7 @@
 		addLights(stage);
 
 		function bindControls(stage) {
-			stage.camera.position = vec(0, 0, 500);
+			stage.camera.position.set(0, 0, 500);
 			// Assign the controls to `stage.controls`,
 			// so the stage knows how to update the camera during the render loop.
 			stage.controls = new THREE.TrackballControls(stage.camera, stage.renderer.domElement);
@@ -67,7 +59,7 @@
 				// Every Object3D (of which Mesh is a subclass) has several descriptions
 				// of its spatial orientation. This is the <x, y, z> position, spreading
 				// the trees roughly uniformly in a 1000 by 1000 by 1000 box, centered at the origin
-				tree.position = vec(
+				tree.position.set(
 					( Math.random() - 0.5 ) * 1000,
 					( Math.random() - 0.5 ) * 1000,
 					( Math.random() - 0.5 ) * 1000
@@ -79,7 +71,7 @@
 				// Wobble the point along the two "flat" planes, so they look like they're all pointing different ups.
 				var qPI = Math.PI/4;
 				tree.eulerOrder = "XZY";
-				tree.rotation = vec(
+				tree.rotation.set(
 					// Spin up to a quarter turn, so they all have differnt "faces" showing
 					// Constrain the rotation to within a half-angle
 					0, //(Math.random() - qPI) * qPI,

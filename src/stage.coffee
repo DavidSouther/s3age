@@ -1,5 +1,14 @@
 class S3age
-	constructor: (selector)->
+	###
+	Prepare a new THREE S3age.
+	Insert the renderer's domElement as a child of the first element returned by selector,
+	or directly under body if no selector is used.
+
+	@param {selector} string css selector to append dom element. Default: "body"
+	@param {autostart} boolean begin running the scene immediately. Othwerise, call S3age::start(). Default: false
+	@param {inspector} boolean expose the scene and camera on the window, so Three.js inspector can find them. Default: false
+	###
+	constructor: (selector = "body", autostart = true, inspector = false)->
 		# Public params
 		@camera = @renderer = @scene = @controls = undefined
 		@scene = new THREE.Scene()
@@ -19,6 +28,12 @@ class S3age
 		@renderer = S3age.Renderer @
 		# attach the render-supplied DOM element
 		container.appendChild @renderer.domElement
+
+		# Possibly expose to the global scope
+		if inspector
+			window.camera = @camera
+			window.scene = @scene
+			window.renderer = @renderer
 
 		# Set up a window resize handler
 		window.addEventListener 'resize', resize = =>

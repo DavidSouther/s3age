@@ -113,9 +113,9 @@ function Tree(height){
 
 	var geometry = new THREE.CylinderGeometry( 0, 10, height, 4, 1 );
 	var material =  new THREE.MeshPhongMaterial({ color: 0x33EE33 });
-	var trunk = new THREE.Mesh( geometry, material );
-	trunk.position.y = height / 2;
-	this.add(trunk);
+	this.trunk = new THREE.Mesh( geometry, material );
+	this.trunk.position.y = height / 2;
+	this.add(this.trunk);
 };
 
 Tree.prototype = Object.create(THREE.Object3D.prototype);

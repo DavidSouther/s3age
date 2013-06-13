@@ -55,7 +55,7 @@ Forest.prototype.plantTrees = function() {
 Forest.prototype.plantSapling = function(u, v) {
 	var tree = new Tree();
 	tree.position.set(u, 0, v);
-	tree.z = this.height(u, v);
+	tree.y = this.height(u, v);
 	this.add( tree );
 };
 
@@ -84,6 +84,7 @@ Forest.prototype.height = (function() {
 		caster.ray.origin.set(u, -v, this.prominence);
 		intersection = caster.intersectObject(this.ground);
 		if(intersection.length){
+			height = intersection[0].point.z;
 			face = intersection[0].face;
 			vertices = intersection[0].object.geometry.vertices;
 			// Calc this better!

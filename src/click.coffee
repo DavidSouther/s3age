@@ -16,7 +16,7 @@ do ->
 
 				# Get the projection vector for the raycast
 				# Move from window coordinates to scene coordinates (TODO: move to stage class)
-				vector = new THREE.Vector3( ( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, 0.5 )
+				vector = stage.clickPoint(event.clientX, event.clientY);
 				projector.unprojectVector( vector, stage.camera )
 				# Then point it away from the camera
 				vector.sub( stage.camera.position ).normalize()

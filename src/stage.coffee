@@ -13,8 +13,9 @@ class S3age
 		if not Detector?.webgl then Detector.WebGLErrorMessage.add()
 
 		# Public params
-		@camera = @renderer = @scene = @controls = undefined
+		@camera = @renderer = @scene = @controls = @stats = undefined
 		@scene = new THREE.Scene()
+		@clock = new THREE.Clock()
 		@running = autostart
 		@FPS = 100
 
@@ -84,10 +85,11 @@ class S3age
 	###
 	update: ->
 		if @running
-			stats?.begin()
+			@stats?.begin()
 
 			@controls?.update()
+			child.update?(@clock) for child in @scene.children
 			@renderer.render()
 
-			stats?.end()
+			@stats?.end()
 		setTimeout (=>requestAnimationFrame =>@update()), 1000 / @FPS

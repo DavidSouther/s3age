@@ -93,3 +93,14 @@ class S3age
 
 			@stats?.end()
 		setTimeout (=>requestAnimationFrame =>@update()), 1000 / @FPS
+
+	###
+	Convert from <U,V> DOM coords to <X, Y, Z> screen coords.
+	###
+	clickPoint: (u, v)->
+		vector = new THREE.Vector3(
+			( u / @_container.clientWidth ) * 2 - 1,
+			- ( v / @_container.clientHeight ) * 2 + 1,
+			0.5
+		)
+		vector

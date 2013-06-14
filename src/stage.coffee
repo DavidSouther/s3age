@@ -13,53 +13,78 @@ class S3age
 		@camera = @renderer = @scene = @controls = undefined
 		@scene = new THREE.Scene()
 		@running = autostart
-		@FPS = 60
+		@FPS = 100
 
-		container = document.querySelector selector
-
-		# Resize the stage to the current container bounds
-		do size = =>
-			@width = container.clientWidth
-			@height = container.clientHeight
-			@aspect = @width / @height
+		@_container = document.querySelector selector
 
 		# Set up the render pipeline
 		@camera = S3age.Camera @
 		@renderer = S3age.Renderer @
+
 		# attach the render-supplied DOM element
-		container.appendChild @renderer.domElement
+		@_container.appendChild @renderer.domElement
 
 		# Possibly expose to the global scope
-		if inspector
-			window.camera = @camera
-			window.scene = @scene
-			window.renderer = @renderer
+		if inspector then @expose()
 
 		# Set up a window resize handler
-		window.addEventListener 'resize', resize = =>
-			size()
-			@camera.resize()
-			@renderer.resize()
-		resize()
+		window.addEventListener 'resize', => @onResize()
+		@onResize()
 
+		@clicks()
+		@update()
+
+	###
+	Play and pause the S3age
+	###
+	start: -> @running = yes
+	stop: -> @running = no
+
+	###
+	Exposes the s3age to ThreejsInspector
+	###
+	expose: ->
+		window.camera = @camera
+		window.scene = @scene
+		window.renderer = @renderer
+
+	###
+	Resize the s3age to the current container bounds
+	###
+	size: ->
+		@width = @_container.clientWidth
+		@height = @_container.clientHeight
+		@aspect = @width / @height
+
+	###
+	Resize handler
+	###
+	onResize: ->
+		@size()
+		@camera.resize()
+		@renderer.resize()
+
+	###
+	Prepare click handlers
+	###
+	clicks: ->
 		# Register a click handler that implicitly calls onclick of any clicked object.
 		# That is, any object with an onclick function in the stage's scene graph is
 		# "clickable" implicitly.
 		@clicked = (intersects)->
 			for intersect in intersects
 				intersect.object.onclick? intersect
-		S3age.Click container,  @
+		S3age.Click @_container,  @
 
-		# The render loop and render clock
-		do update = =>
-			if @running
-				stats?.begin()
+	###
+	The render loop and render clock.
+	###
+	update: ->
+		if @running
+			stats?.begin()
 
-				@controls?.update()
-				@renderer.render()
+			@controls?.update()
+			@renderer.render()
 
-				stats?.end()
-			setTimeout (->requestAnimationFrame update), 1000 / @FPS
-
-	start: -> @running = yes
-	stop: -> @running = no
+			stats?.end()
+		setTimeout (=>requestAnimationFrame =>@update()), 1000 / @FPS

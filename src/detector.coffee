@@ -14,7 +14,7 @@ do ->
 			do ->
 				try
 					# Easiest way to check if WebGL is available is to try creating a context
-					return !! window.WebGLRenderingContext !! document.createElement( 'canvas' ).getContext( 'experimental-webgl' )
+					return !! window.WebGLRenderingContext and !! document.createElement( 'canvas' ).getContext( 'experimental-webgl' )
 				catch e
 					return false
 

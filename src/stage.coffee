@@ -95,12 +95,20 @@ class S3age
 		setTimeout (=>requestAnimationFrame =>@update()), 1000 / @FPS
 
 	###
-	Convert from <U,V> DOM coords to <X, Y, Z> screen coords.
+	Return a racaster pointing from the camera into the scene, given a <u, v> coordinate
+	on the plane of the canvas.
 	###
-	clickPoint: (u, v)->
-		vector = new THREE.Vector3(
-			( u / @_container.clientWidth ) * 2 - 1,
-			- ( v / @_container.clientHeight ) * 2 + 1,
-			0.5
-		)
-		vector
+	raycaster: do ->
+		projector = new THREE.Projector
+		(u, v)->
+			# Move from window coordinates to scene coordinates (TODO: move to stage class)
+			vector = new THREE.Vector3(
+				( u / @_container.clientWidth ) * 2 - 1,
+				- ( v / @_container.clientHeight ) * 2 + 1,
+				0.5
+			)
+			projector.unprojectVector( vector, @camera )
+			# Then point it away from the camera
+			vector.sub( @camera.position ).normalize()
+			raycaster = new THREE.Raycaster @camera.position, vector
+			raycaster

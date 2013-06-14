@@ -9,6 +9,9 @@ class S3age
 	@param {inspector} boolean expose the scene and camera on the window, so Three.js inspector can find them. Default: false
 	###
 	constructor: (selector = "body", autostart = true, inspector = false)->
+		# Return immediately if rendering is unavailable.
+		if not Detector?.webgl then Detector.WebGLErrorMessage.add()
+
 		# Public params
 		@camera = @renderer = @scene = @controls = undefined
 		@scene = new THREE.Scene()

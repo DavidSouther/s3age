@@ -8,28 +8,31 @@ class S3age
 	@param {autostart} boolean begin running the scene immediately. Othwerise, call S3age::start(). Default: false
 	@param {inspector} boolean expose the scene and camera on the window, so Three.js inspector can find them. Default: false
 	###
-	constructor: (selector = "body", autostart = true, inspector = false)->
+	constructor: (selector = "body", defaults = {})->
 		# Return immediately if rendering is unavailable.
 		if not Detector?.webgl then Detector.WebGLErrorMessage.add()
+
+		# Set default params
+		@default defaults
 
 		# Public params
 		@camera = @renderer = @scene = @controls = @stats = undefined
 		@scene = new THREE.Scene()
 		@clock = new THREE.Clock()
-		@running = autostart
+		@running = defaults.autostart
 		@FPS = 100
 
 		@_container = document.querySelector selector
 
 		# Set up the render pipeline
-		@camera = S3age.Camera @
-		@renderer = S3age.Renderer @
+		@camera = S3age.Camera @, defaults.camera
+		@renderer = S3age.Renderer @, defaults.renderer
 
 		# attach the render-supplied DOM element
 		@_container.appendChild @renderer.domElement
 
 		# Possibly expose to the global scope
-		if inspector then @expose()
+		if defaults.inspector then @expose()
 
 		# Set up a window resize handler
 		window.addEventListener 'resize', => @onResize()
@@ -38,11 +41,22 @@ class S3age
 		@clicks()
 		@update()
 
+	default: (defaults)->
+		defaults.autostart ?= true
+		defaults.inspector ?= false
+		defaults.renderer ?= {}
+		defaults.camera ?= {}
+		@
+
 	###
 	Play and pause the S3age
 	###
-	start: -> @running = yes
-	stop: -> @running = no
+	start: ->
+		@running = yes
+		@
+	stop: ->
+		@running = no
+		@
 
 	###
 	Exposes the s3age to ThreejsInspector
@@ -51,6 +65,7 @@ class S3age
 		window.camera = @camera
 		window.scene = @scene
 		window.renderer = @renderer
+		@
 
 	###
 	Resize the s3age to the current container bounds
@@ -67,6 +82,7 @@ class S3age
 		@size()
 		@camera.resize()
 		@renderer.resize()
+		@
 
 	###
 	Prepare click handlers
@@ -79,6 +95,7 @@ class S3age
 			for intersect in intersects
 				intersect.object.onclick? intersect
 		S3age.Click @_container,  @
+		@
 
 	###
 	The render loop and render clock.
@@ -88,11 +105,12 @@ class S3age
 			@stats?.begin()
 
 			@controls?.update()
-			child.update?(@clock) for child in @scene.children
+			try child.update?(@clock) for child in @scene.children
 			@renderer.render()
 
 			@stats?.end()
 		setTimeout (=>requestAnimationFrame =>@update()), 1000 / @FPS
+		@
 
 	###
 	Return a racaster pointing from the camera into the scene, given a <u, v> coordinate

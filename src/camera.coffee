@@ -1,4 +1,9 @@
-S3age.Camera = (stage, fov=45, near=1, far=1000)->
+S3age.Camera = (stage, defaults = {})->
+	
+	fov  = defaults.fov  || 45
+	near = defaults.near || 1
+	far  = defaults.far  || 1000
+
 	camera = new THREE.PerspectiveCamera fov, stage.aspect, near, far
 
 	camera.resize = ->

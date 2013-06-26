@@ -1,5 +1,5 @@
-S3age.Renderer = (stage)->
-	renderer = new THREE.WebGLRenderer()
+S3age.Renderer = (stage, defaults)->
+	renderer = new THREE.WebGLRenderer defaults
 	renderer.resize = ->
 		# start the renderer
 		renderer.setSize stage.width, stage.height

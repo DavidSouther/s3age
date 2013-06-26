@@ -19,6 +19,7 @@ class S3age
 		@camera = @renderer = @scene = @controls = @stats = undefined
 		@scene = new THREE.Scene()
 		@clock = new THREE.Clock()
+		@clock.start()
 		@running = defaults.autostart
 		@FPS = 100
 
@@ -33,6 +34,7 @@ class S3age
 
 		# Possibly expose to the global scope
 		if defaults.inspector then @expose()
+		if defaults.statistics then @showstats()
 
 		# Set up a window resize handler
 		window.addEventListener 'resize', => @onResize()
@@ -44,6 +46,7 @@ class S3age
 	default: (defaults)->
 		defaults.autostart ?= true
 		defaults.inspector ?= false
+		defaults.statistics ?= defaults.stats  || true
 		defaults.renderer ?= {}
 		defaults.camera ?= {}
 		@
@@ -65,6 +68,16 @@ class S3age
 		window.camera = @camera
 		window.scene = @scene
 		window.renderer = @renderer
+		@
+
+	###
+	Create Stats div, attach to container.
+	###
+	showstats: ->
+		@stats = new Stats();
+		@stats.domElement.style.position = 'absolute';
+		@stats.domElement.style.top = '0px';
+		@_container.appendChild @stats.domElement
 		@
 
 	###

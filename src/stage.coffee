@@ -129,7 +129,7 @@ class S3age
 	Return a racaster pointing from the camera into the scene, given a <u, v> coordinate
 	on the plane of the canvas.
 	###
-	raycaster: do ->
+	raycast: do ->
 		projector = new THREE.Projector
 		(u, v)->
 			# Move from window coordinates to scene coordinates (TODO: move to stage class)

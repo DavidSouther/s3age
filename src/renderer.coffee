@@ -1,4 +1,7 @@
-S3age.Renderer = (stage, defaults)->
+S3age.Renderer = (stage, defaults = {})->
+
+	defaults.antialias = defaults.antialias || true
+
 	renderer = new THREE.WebGLRenderer defaults
 	renderer.resize = ->
 		# start the renderer

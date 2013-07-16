@@ -12,7 +12,7 @@ S3age.Click = (element, stage)->
 			down = 0
 
 			# Get the raycaster from the scene
-			vector = stage.raycast(event.clientX, event.clientY)
+			raycaster = stage.raycast(event.clientX, event.clientY)
 
 			# Find the list of intersections
 			intersects = raycaster.intersectObjects stage.scene.children, yes

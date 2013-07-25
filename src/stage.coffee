@@ -18,9 +18,7 @@ class S3age
 		# Public params
 		@camera = @renderer = @scene = @controls = @stats = undefined
 		@scene = new THREE.Scene()
-		@clock = new THREE.Clock()
-		@clock.start()
-		@running = defaults.autostart
+		@clock = new S3age.Clock()
 		@FPS = 100
 
 		@_container = document.querySelector selector
@@ -35,14 +33,15 @@ class S3age
 		@_container.appendChild @renderer.domElement
 
 		# Possibly expose to the global scope
-		if defaults.inspector then @expose()
-		if defaults.statistics then @showstats()
+		@expose() if defaults.inspector or defaults.exposed
+		@showstats() if defaults.statistics
 
 		# Set up a window resize handler
 		window.addEventListener 'resize', => @onResize()
 		@onResize()
 
 		@clicks()
+		@start() if defaults.autostart
 		@update()
 
 	default: (defaults)->
@@ -62,6 +61,7 @@ class S3age
 	Play and pause the S3age
 	###
 	start: ->
+		setTimeout (=>@clock.start()), 0 # Start on the next tick, so the first frame doesn't get poluted with more initialization.
 		@running = yes
 		@
 	stop: ->
@@ -124,7 +124,8 @@ class S3age
 		if @running
 			@stats?.begin()
 
-			@controls?.update()
+			@clock.tick()
+			@controls?.update(@clock)
 			try child.update?(@clock) for child in @scene.children
 			@renderer.render()
 

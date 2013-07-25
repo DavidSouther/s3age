@@ -48,7 +48,7 @@ S3age.Renderer = (stage, defaults = {})->
 		renderer.setSize stage.width, stage.height
 
 	_render = renderer.render
-	renderer.render = ->
-		_render.call renderer, stage.scene, stage.camera
+	renderer.render = (scene = stage.scene, camera = stage.camera, buffer = undefined, clear = undefined)->
+		_render.apply renderer, [scene, camera, buffer, clear]
 
 	renderer

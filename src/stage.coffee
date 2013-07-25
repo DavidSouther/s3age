@@ -26,6 +26,7 @@ class S3age
 		# Set up the render pipeline
 		@camera = S3age.Camera @, defaults.camera
 		@renderer = S3age.Renderer @, defaults.renderer
+		@effects defaults.effects
 		@dress defaults.scene if defaults.scene?
 		@controls = defaults.controls
 
@@ -50,6 +51,7 @@ class S3age
 		defaults.statistics ?= defaults.stats  || true
 		defaults.renderer ?= {}
 		defaults.camera ?= {}
+		defaults.effects ?= []
 		@
 
 	dress: (statics)->
@@ -118,6 +120,25 @@ class S3age
 		@
 
 	###
+	Prepare an effects loop.
+	###
+	effects: (passes)->
+		if passes.length and not THREE.EffectComposer
+			console.warn "Processing pipeline requested, but no EffectComposer available."
+		passes.unshift new THREE.RenderPass @scene, @camera
+		pass.renderToScreen = false for pass in passes
+		passes[passes.length-1].renderToScreen = true
+		@composer = new THREE.EffectComposer @renderer
+		@composer.addPass pass for pass in passes
+
+	###
+	Render the scene as it currently is.
+	###
+	render: ->
+		return @renderer.render() if not THREE.EffectComposer
+		@composer.render()
+
+	###
 	The render loop and render clock.
 	###
 	update: ->
@@ -126,7 +147,7 @@ class S3age
 
 			@controls?.update(@clock)
 			try child.update?(@clock) for child in @scene.children
-			@renderer.render()
+			@render()
 
 			@stats?.end()
 		setTimeout (=>requestAnimationFrame =>@update()), 1000 / @FPS

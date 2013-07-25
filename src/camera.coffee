@@ -1,10 +1,13 @@
 S3age.Camera = (stage, defaults = {})->
 	
-	fov  = defaults.fov  || 45
-	near = defaults.near || 1
-	far  = defaults.far  || 1000
+	fov  = defaults.fov  or 45
+	near = defaults.near or 1
+	far  = defaults.far  or 1000
 
 	camera = new THREE.PerspectiveCamera fov, stage.aspect, near, far
+
+	camera.position = defaults.position if defaults.position instanceof THREE.Vector3
+	camera.position.fromArray defaults.position if defaults.position instanceof Array
 
 	camera.resize = ->
 		# On resize, check the stage's updated aspect ratio, since the stage abstracts the screen.

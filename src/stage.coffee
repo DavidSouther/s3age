@@ -26,7 +26,7 @@ class S3age
 		# Set up the render pipeline
 		@camera = S3age.Camera @, defaults.camera
 		@renderer = S3age.Renderer @, defaults.renderer
-		@effects defaults.effects
+		@effects defaults.effects # Todo move to a helper composer class.
 		@dress defaults.scene if defaults.scene?
 		@controls = defaults.controls
 
@@ -124,9 +124,12 @@ class S3age
 	Prepare an effects loop.
 	###
 	effects: (passes)->
-		if passes.length and not THREE.EffectComposer
-			console.warn "Processing pipeline requested, but no EffectComposer available."
+		if not THREE.EffectComposer
+			if passes.length
+				console.warn "Processing pipeline requested, but no EffectComposer available."
+			return
 		passes.unshift new THREE.RenderPass @scene, @camera
+		passes.push new THREE.ShaderPass THREE.CopyShader
 		pass.renderToScreen = false for pass in passes
 		passes[passes.length-1].renderToScreen = true
 		@composer = new THREE.EffectComposer @renderer

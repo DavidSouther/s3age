@@ -124,7 +124,6 @@ class S3age
 		if @running
 			@stats?.begin()
 
-			@clock.tick()
 			@controls?.update(@clock)
 			try child.update?(@clock) for child in @scene.children
 			@renderer.render()

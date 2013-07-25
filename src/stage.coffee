@@ -52,6 +52,9 @@ class S3age
 		defaults.renderer ?= {}
 		defaults.camera ?= {}
 		defaults.effects ?= []
+		defaults.scene ?= {}
+		defaults.scene.lights ?= []
+		defaults.scene.children ?= []
 		@
 
 	dress: (statics)->

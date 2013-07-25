@@ -28,6 +28,8 @@ class S3age
 		# Set up the render pipeline
 		@camera = S3age.Camera @, defaults.camera
 		@renderer = S3age.Renderer @, defaults.renderer
+		@dress defaults.scene if defaults.scene?
+		@controls = defaults.controls
 
 		# attach the render-supplied DOM element
 		@_container.appendChild @renderer.domElement
@@ -50,6 +52,11 @@ class S3age
 		defaults.renderer ?= {}
 		defaults.camera ?= {}
 		@
+
+	dress: (statics)->
+		@scene.fog = statics.fog if statics.fog
+		@scene.add light for light in statics.lights
+		@scene.add child for child in statics.children
 
 	###
 	Play and pause the S3age

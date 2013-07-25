@@ -8,7 +8,7 @@ class S3age
 	@param {autostart} boolean begin running the scene immediately. Othwerise, call S3age::start(). Default: false
 	@param {inspector} boolean expose the scene and camera on the window, so Three.js inspector can find them. Default: false
 	###
-	constructor: (selector = "body", defaults = {})->
+	constructor: (selector = "body", @defaults = {})->
 		# Return immediately if rendering is unavailable.
 		if not Detector?.webgl then Detector.WebGLErrorMessage.add()
 
@@ -104,6 +104,7 @@ class S3age
 		@size()
 		@camera.resize()
 		@renderer.resize()
+		pass.resize? @width, @height for pass in @defaults.effects
 		@
 
 	###

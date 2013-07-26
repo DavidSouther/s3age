@@ -13,7 +13,7 @@ class S3age
 		if not Detector?.webgl then Detector.WebGLErrorMessage.add()
 
 		# Set default params
-		@default defaults
+		@default @defaults
 
 		# Public params
 		@camera = @renderer = @scene = @controls = @stats = undefined
@@ -24,25 +24,25 @@ class S3age
 		@_container = document.querySelector selector
 
 		# Set up the render pipeline
-		@camera = S3age.Camera @, defaults.camera
-		@renderer = S3age.Renderer @, defaults.renderer
-		@effects defaults.effects # Todo move to a helper composer class.
-		@dress defaults.scene if defaults.scene?
-		@controls = defaults.controls
+		@camera = S3age.Camera @, @defaults.camera
+		@renderer = S3age.Renderer @, @defaults.renderer
+		@effects @defaults.effects # Todo move to a helper composer class.
+		@dress @defaults.scene if @defaults.scene?
+		@controls = @defaults.controls
 
 		# attach the render-supplied DOM element
 		@_container.appendChild @renderer.domElement
 
 		# Possibly expose to the global scope
-		@expose() if defaults.inspector or defaults.exposed
-		@showstats() if defaults.statistics
+		@expose() if @defaults.inspector or @defaults.exposed
+		@showstats() if @defaults.statistics
 
 		# Set up a window resize handler
 		window.addEventListener 'resize', => @onResize()
 		@onResize()
 
 		@clicks()
-		@start() if defaults.autostart
+		@start() if @defaults.autostart
 		@update()
 
 	default: (defaults)->

@@ -1,5 +1,5 @@
-<label class='tree-toggle nav-header untested'>{{path}}</label>
-<ul class='nav nav-list tree'>
+<label class='tree-toggle nav-header untested' ng-click="closed = !closed">{{path}}</label>
+<ul class='nav nav-list tree' ng-hide="closed">
 	<li ng-repeat="(name, test) in tests.tests">
 		<button ng-click='Test.load(test.path)' class='example btn btn-block' ng-class="{
 			'btn-warning': test.warn,

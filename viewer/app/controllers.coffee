@@ -58,7 +58,6 @@ testing.controller "testing", ($scope, testloader, $timeout, $location)->
 				Test.next()
 
 	$scope.$on "take snapshot", ->
-		console.log "Broadcasting 'trigger snapshot'"
 		$scope.$broadcast "trigger snapshot"
 
 testing.controller "menu", ($scope, $http)->
@@ -66,16 +65,18 @@ testing.controller "menu", ($scope, $http)->
 testing.controller "controls", ($scope, snapshot)->
 	$scope.Snapshot = snapshot
 	$scope.snap = ->
-		console.log "Emitting 'take snapshot'"
 		$scope.$emit "take snapshot"
 
 testing.controller "viewports", ($scope, snapshot)->
 	iframe = document.querySelector "#viewer"
 	stage = null
 	iframe.onload = ->
-		stage = iframe.contentWindow.stage
+		wind = iframe.contentWindow
+		stage = wind.stage
 		disabled = not (stage?.debug?.image?)
+		bgcolor = wind.document.body.style.backgroundColor
 		$scope.$apply ->
+			snapshot.backgroundColor = bgcolor
 			snapshot.URL = ""
 			snapshot.disabled = disabled
 

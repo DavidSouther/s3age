@@ -27,28 +27,37 @@
 		</div>
 
 		<div id="menu-well" class="well" ng-controller="menu">
-			<label class="clearfix pull-left title welled">Menu</label>
-			<ng-include src="'menu_item.html'"></ng-include>
+			<label class="title welled">Menu</label>
+			<div class="scroll">
+				<ng-include src="'menu_item.html'"></ng-include>
+			</div>
 		</div>
 
-		<div id="renderers" ng-controller="viewports">
-			<div id="viewer-well" class="well">
-				<label class="clearfix pull-left title">Viewport</label>
-				<div class="center-502">
-					<iframe id="viewer" ng-src="../../examples/{{Test.current.path}}"></iframe>
+		<div id="viewports" class="renderers" ng-controller="viewports">
+			<div class="well">
+				<label class="title margin-reset">Viewport</label>
+				<div class="scroll">
+					<div class="center-502">
+						<iframe id="viewer" ng-src="../../examples/{{Test.current.path}}"></iframe>
+					</div>
 				</div>
 			</div>
 
-			<div id="snapshot-well" class="well">
-				<label class="clearfix pull-left title">Snapshot</label>
-				<div class="center-502">
-					<img id="snapshot" ng-src="{{Snapshot.URL}}" />
+			<div class="well">
+				<label class="title margin-reset">Snapshot</label>
+				<div class="scroll">
+					<div class="center-502">
+						<img id="snapshot"
+							ng-src="{{Snapshot.URL}}"
+							ng-style="{ 'background-color': Snapshot.backgroundColor }" />
+					</div>
 				</div>
 			</div>
+
 		</div>
 
 		<div id="scripting-well" class="well" ng-controller="controls">
-			<label class="clearfix pull-left title welled">Controls</label>
+			<label class="title welled">Controls</label>
 			<div class="controls">
 				<div class="nav navbar">
 					<button ng-click="Test.previous()" class="btn btn-primary navbar-btn pull-left">Previous</button>

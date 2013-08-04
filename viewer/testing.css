@@ -2,9 +2,8 @@
 	margin-bottom: 0;
 }
 
-.center-502 {
-	width: 502px;
-	margin: 0 auto;
+.well > label {
+	position: absolute;
 }
 
 label.title {
@@ -12,24 +11,36 @@ label.title {
 	border-bottom: 1px solid #e3e3e3;
 	border-right: 1px solid #e3e3e3;
 	border-bottom-right-radius: 4px;
-}
-
-label.title.welled {
 	margin-top: -19px;
 	margin-left: -19px;
 }
 
+label.title.margin-reset {
+	margin: 0;
+}
+.scroll {
+	overflow: auto;
+	height: 100%;
+}
+
+.center-502 {
+	width: 502px;
+	margin: 0 auto;
+}
+
+
 #menu-well {
 	position: absolute;
-	overflow: auto;
 	top: 60px;
 	bottom: 2%;
 	left: 1%;
 	right: 85%;
+	padding-right: 0;
+	padding-bottom: 0;
 }
 
-#menu-well > ul {
-	padding-top: 15px;
+#menu-well > .scroll {
+	padding-right: 10px;
 }
 
 .nav > li > button {
@@ -37,17 +48,23 @@ label.title.welled {
 	margin-bottom: 2px;
 }
 
-#viewer-well {
-	overflow: auto;
-
+#viewports {
 	position: absolute;
 	top: 60px;
-	bottom: 48.5%;
+	bottom: 2%;
 	left: 16%;
 	right: 25%;
+}
+
+.renderers .well {
+	height: 49.5%;
 
 	margin: 0;
-	padding: 0em;
+	padding: 0;
+}
+
+.renderers .well:nth-of-type(1) {
+	margin-bottom: 1%;
 }
 
 #viewer {
@@ -56,27 +73,12 @@ label.title.welled {
 	border: 1px solid #bbb;
 }
 
-#snapshot-well {
-	overflow: auto;
-
-	position: absolute;
-	top: 52.5%;
-	bottom: 2%;
-	left: 16%;
-	right: 25%;
-
-	margin: 0;
-	padding: 0em;
-}
-
 #snapshot {
 	width: 502px;
 	height: 502px;
 }
 
 #scripting-well {
-	overflow: auto;
-
 	position: absolute;
 	top: 60px;
 	bottom: 2%;

@@ -59,7 +59,11 @@
 					<button ng-click="Test.fail()" class="btn btn-danger navbar-btn pull-right">Fail</button>
 				</div>
 				<div class="nav navbar">
-					<button ng-click="Snapshot.snap()" class="btn btn-default navbar-btn btn-block">Snapshot</button>
+					<button
+						ng-click="snap()"
+						class="btn navbar-btn btn-block btn-default"
+						ng-disabled="Snapshot.disabled"
+					>Snapshot</button>
 				<div>
 			</div>
 		</div>

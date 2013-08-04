@@ -45,20 +45,41 @@ testing.controller "testing", ($scope, testloader, $timeout, $location)->
 		fail: ->
 			Test.set false, true
 
-	testloader.get()
+	testloader.get("tests_s3age.json")
 	.success (data)->
 		$scope.tests = data
 		order $scope.tests if $scope.tests
-		if url = $location.path()
-			if url[0] = '/' then url = url.substring(1)
-			Test.load url
-		else
-			Test.next()
+		# Odd timing issue needs timeout.
+		$timeout ->
+			if url = $location.path()
+				if '/' is url[0] then url = url.substring(1)
+				Test.load url
+			else
+				Test.next()
+
+	$scope.$on "take snapshot", ->
+		console.log "Broadcasting 'trigger snapshot'"
+		$scope.$broadcast "trigger snapshot"
 
 testing.controller "menu", ($scope, $http)->
 
 testing.controller "controls", ($scope, snapshot)->
 	$scope.Snapshot = snapshot
+	$scope.snap = ->
+		console.log "Emitting 'take snapshot'"
+		$scope.$emit "take snapshot"
 
 testing.controller "viewports", ($scope, snapshot)->
+	iframe = document.querySelector "#viewer"
+	stage = null
+	iframe.onload = ->
+		stage = iframe.contentWindow.stage
+		disabled = not (stage?.debug?.image?)
+		$scope.$apply ->
+			snapshot.URL = ""
+			snapshot.disabled = disabled
+
 	$scope.Snapshot = snapshot
+	$scope.$on "trigger snapshot", ->
+		return if snapshot.disabled
+		snapshot.URL = stage.debug.image().toDataURL()

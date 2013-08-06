@@ -9,33 +9,42 @@ testing.controller "testing", ($scope, testloader, $timeout, $location)->
 		recur tests
 
 	Test = $scope.Test =
+		tests:
+			tests: {}
+			children: {}
 		current:
 			name: ''
 			path: ''
-		load: (url)->
-			$location.path url
-			Test.current = Test.find.test url
+
 		find:
 			test: (path)->
+				# Remove the posible ./ or /./ when looking up tests
+				path = path.replace /^\/?\.\//, ""
 				path = path.split "/"
-				path.shift()
 				test = path.pop()
 				base = $scope.tests
-				while part = path.shift()
-					base = base.children[part]
-				base.tests[test]
+				try
+					while part = path.shift()
+						base = base.children[part]
+					base.tests[test]
+				catch
+					name: "unknown"
+					path: ""
+
 		move: (i = 1)->
 			index = ordered.indexOf(Test.current.path)
 			if index + i < 0 then index += ordered.length
 			next = ordered[(index + i) % ordered.length]
-			Test.current = Test.find.test next
+			next = Test.find.test next
+			$location.path next.path
 		previous: ->
 			Test.move -1
 		next: ->
 			return Test.first() if Test.current.path is ''
 			Test.move()
 		first: ->
-			Test.current = Test.find.test ordered[0]
+			$location.path Test.find.test ordered[0]
+
 		set: (p, f)->
 			Test.current.pass = p
 			Test.current.fail = f
@@ -45,17 +54,19 @@ testing.controller "testing", ($scope, testloader, $timeout, $location)->
 		fail: ->
 			Test.set false, true
 
+	load = ->
+		$timeout -> $scope.$apply ->
+			Test.current = Test.find.test $location.path()
+			$scope.$broadcast "test loaded"
+
 	testloader.get("tests_s3age.json")
 	.success (data)->
 		$scope.tests = data
 		order $scope.tests if $scope.tests
-		# Odd timing issue needs timeout.
-		$timeout ->
-			if url = $location.path()
-				if '/' is url[0] then url = url.substring(1)
-				Test.load url
-			else
-				Test.next()
+		load()
+
+	$scope.location = $location
+	$scope.$watch "location.path()", load
 
 	$scope.$on "take snapshot", ->
 		$scope.$broadcast "trigger snapshot"
@@ -66,4 +77,3 @@ testing.controller "controls", ($scope, snapshot)->
 	$scope.Snapshot = snapshot
 	$scope.snap = ->
 		$scope.$emit "take snapshot"
-

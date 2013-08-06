@@ -1,7 +1,8 @@
 testing.factory "snapshot", ->
 	Snap =
 		disabled: true
-		URL: ""
+		image:
+			data: ""
 
 testing.factory "testloader", ($http)->
 	Loader =

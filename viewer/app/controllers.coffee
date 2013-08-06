@@ -67,20 +67,3 @@ testing.controller "controls", ($scope, snapshot)->
 	$scope.snap = ->
 		$scope.$emit "take snapshot"
 
-testing.controller "viewports", ($scope, snapshot)->
-	iframe = document.querySelector "#viewer"
-	stage = null
-	iframe.onload = ->
-		wind = iframe.contentWindow
-		stage = wind.stage
-		disabled = not (stage?.debug?.image?)
-		bgcolor = wind.document.body.style.backgroundColor
-		$scope.$apply ->
-			snapshot.backgroundColor = bgcolor
-			snapshot.URL = ""
-			snapshot.disabled = disabled
-
-	$scope.Snapshot = snapshot
-	$scope.$on "trigger snapshot", ->
-		return if snapshot.disabled
-		snapshot.URL = stage.debug.image().toDataURL()

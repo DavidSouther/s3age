@@ -33,28 +33,7 @@
 			</div>
 		</div>
 
-		<div id="viewports" class="renderers" ng-controller="viewports">
-			<div class="well">
-				<label class="title margin-reset">Viewport</label>
-				<div class="scroll">
-					<div class="center-502">
-						<iframe id="viewer" ng-src="../../examples/{{Test.current.path}}"></iframe>
-					</div>
-				</div>
-			</div>
-
-			<div class="well">
-				<label class="title margin-reset">Snapshot</label>
-				<div class="scroll">
-					<div class="center-502">
-						<img id="snapshot"
-							ng-src="{{Snapshot.URL}}"
-							ng-style="{ 'background-color': Snapshot.backgroundColor }" />
-					</div>
-				</div>
-			</div>
-
-		</div>
+		<div id="viewports" class="renderers" testing-viewports current-test="Test.current"></div>
 
 		<div id="scripting-well" class="well" ng-controller="controls">
 			<label class="title welled">Controls</label>

@@ -13,6 +13,7 @@ label.title {
 	border-bottom-right-radius: 4px;
 	margin-top: -19px;
 	margin-left: -19px;
+	background-color: rgba(245, 245, 245, 0.6);
 }
 
 label.title.margin-reset {

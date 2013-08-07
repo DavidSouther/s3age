@@ -68,12 +68,7 @@ testing.controller "testing", ($scope, testloader, $timeout, $location)->
 	$scope.location = $location
 	$scope.$watch "location.path()", load
 
-	$scope.$on "take snapshot", ->
-		$scope.$broadcast "trigger snapshot"
-
 testing.controller "menu", ($scope, $http)->
 
 testing.controller "controls", ($scope, snapshot)->
 	$scope.Snapshot = snapshot
-	$scope.snap = ->
-		$scope.$emit "take snapshot"

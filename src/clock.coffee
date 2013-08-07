@@ -13,9 +13,9 @@ class S3age.Clock
 		tick = =>
 			if running
 				old = @elapsed
-				@elapsed = performance() - started
+				@now = performance()
+				@elapsed = @now - started
 				@delta = @elapsed - old
-			window.requestAnimationFrame tick
 
 		@start = ->
 			running = true

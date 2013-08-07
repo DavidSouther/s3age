@@ -5,8 +5,6 @@ class S3age
 	or directly under body if no selector is used.
 
 	@param {selector} string css selector to append dom element. Default: "body"
-	@param {autostart} boolean begin running the scene immediately. Othwerise, call S3age::start(). Default: false
-	@param {inspector} boolean expose the scene and camera on the window, so Three.js inspector can find them. Default: false
 	###
 	constructor: (selector = "body", @defaults = {})->
 		# Return immediately if rendering is unavailable.
@@ -17,12 +15,11 @@ class S3age
 
 		# Public params
 		@camera = @renderer = @scene = @controls = @stats = undefined
+		@FPS = 100
+		@frame = 0
+
 		@scene = new THREE.Scene()
 		@clock = new S3age.Clock()
-		@FPS = 100
-
-		@_container = document.querySelector selector
-
 		# Set up the render pipeline
 		@camera = S3age.Camera @, @defaults.camera
 		@renderer = S3age.Renderer @, @defaults.renderer
@@ -31,30 +28,36 @@ class S3age
 		@controls = @defaults.controls
 
 		# attach the render-supplied DOM element
+		@_container = document.querySelector selector
 		@_container.appendChild @renderer.domElement
-
-		# Possibly expose to the global scope
-		@expose() if @defaults.inspector or @defaults.exposed
-		@showstats() if @defaults.statistics
 
 		# Set up a window resize handler
 		window.addEventListener 'resize', => @onResize()
 		@onResize()
-
 		@clicks()
-		@start() if @defaults.autostart
+
+		if defaults.debug
+			@debug = S3age.Debug @, defaults.statistics, defaults.inspector
+			@testPlan = defaults.testPlan
+
 		@update()
+		@start() if @defaults.autostart
 
 	default: (defaults)->
 		defaults.autostart ?= true
-		defaults.inspector ?= false
-		defaults.statistics ?= defaults.stats  || true
+
 		defaults.renderer ?= {}
 		defaults.camera ?= {}
 		defaults.effects ?= []
+
 		defaults.scene ?= {}
 		defaults.scene.lights ?= []
 		defaults.scene.children ?= []
+
+		defaults.inspector ?= defaults.expose || false
+		defaults.statistics ?= defaults.stats  || true
+		defaults.debug ?= defaults.testing || window.TESTING || false
+
 		@
 
 	dress: (statics)->
@@ -66,30 +69,12 @@ class S3age
 	Play and pause the S3age
 	###
 	start: ->
-		setTimeout (=>@clock.start()), 0 # Start on the next tick, so the first frame doesn't get poluted with more initialization.
+		# Start the clock on the next tick, so the first frame doesn't get poluted with more initialization.
+		setTimeout (=>@clock.start()), 0 
 		@running = yes
 		@
 	stop: ->
 		@running = no
-		@
-
-	###
-	Exposes the s3age to ThreejsInspector
-	###
-	expose: ->
-		window.camera = @camera
-		window.scene = @scene
-		window.renderer = @renderer
-		@
-
-	###
-	Create Stats div, attach to container.
-	###
-	showstats: ->
-		@stats = new Stats();
-		@stats.domElement.style.position = 'absolute';
-		@stats.domElement.style.top = '0px';
-		@_container.appendChild @stats.domElement
 		@
 
 	###
@@ -107,6 +92,7 @@ class S3age
 		@size()
 		@camera.resize()
 		@renderer.resize()
+		child.resize? @width, @height for child in @scene.children
 		pass.resize? @width, @height for pass in @defaults.effects
 		@
 
@@ -142,14 +128,16 @@ class S3age
 	Render the scene as it currently is.
 	###
 	render: ->
-		return @renderer.render() if not THREE.EffectComposer
-		@composer.render()
+		(if THREE.EffectComposer then @composer else @renderer).render()
+		# Save the framebuffer
+		@debug?()
 
 	###
 	The render loop and render clock.
 	###
 	update: ->
 		if @running
+			@frame++
 			@stats?.begin()
 
 			@controls?.update(@clock)

@@ -11,10 +11,12 @@ module.exports = (grunt)->
 						'src/detector.coffee'
 						'src/stats.coffee'
 						'src/stage.coffee'
+						'src/debug.coffee'
 						'src/clock.coffee'
 						'src/camera.coffee'
 						'src/renderer.coffee'
 						'src/click.coffee'
+						'src/loader.coffee'
 					],
 					'lib/s3age.controls.js': [
 						'src/extend.coffee'

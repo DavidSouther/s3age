@@ -44,7 +44,6 @@ S3age.Renderer = (stage, defaults = {})->
 			renderer[method].apply renderer, args
 
 	renderer.resize = ->
-		# start the renderer
 		renderer.setSize stage.width, stage.height
 
 	_render = renderer.render

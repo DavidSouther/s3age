@@ -8,6 +8,7 @@ S3age.Camera = (stage, defaults = {})->
 
 	camera.position = defaults.position if defaults.position instanceof THREE.Vector3
 	camera.position.fromArray defaults.position if defaults.position instanceof Array
+	camera.lookAt((new THREE.Vector3).fromArray(defaults.lookAt)) if defaults.lookAt
 
 	camera.resize = ->
 		# On resize, check the stage's updated aspect ratio, since the stage abstracts the screen.

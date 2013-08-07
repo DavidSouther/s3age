@@ -17,7 +17,7 @@ testing.controller "testing", ($scope, testloader, $timeout, $location)->
 			path: ''
 
 		find:
-			test: (path)->
+			test: (path = "")->
 				# Remove the posible ./ or /./ when looking up tests
 				path = path.replace /^\/?\.\//, ""
 				path = path.split "/"
@@ -65,8 +65,11 @@ testing.controller "testing", ($scope, testloader, $timeout, $location)->
 		order $scope.tests if $scope.tests
 		load()
 
-	$scope.location = $location
-	$scope.$watch "location.path()", load
+	$scope.$watch (->$location.path()), (->load())
+	$scope.$on "test plan failed", ->
+		Test.fail()
+	$scope.$on "test plan passed", ->
+		Test.pass()
 
 testing.controller "menu", ($scope, $http)->
 

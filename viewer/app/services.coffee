@@ -1,5 +1,6 @@
-testing.factory "snapshot", ->
+testing.factory "snapshot", ($rootScope)->
 	Snap =
+		missed: 0
 		disabled: true
 		image:
 			data: ""
@@ -7,6 +8,7 @@ testing.factory "snapshot", ->
 			# Transparent 1-px gif
 			Snap.image.data = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
 			Snap.shots = []
+			Snap.missed = 0
 		snap: (imageData)->
 			return if Snap.disabled
 			imageData = Snap.stage.debug.image().toDataURL()
@@ -17,12 +19,17 @@ testing.factory "snapshot", ->
 					data: imageData
 		tick: ->
 			return if Snap.disabled
-			if expected = Snap.stage.testPlan?[Snap.stage.frame]
-				Snap.snap()
-				console.log expected
-				console.log Snap.image.data
-				match = if expected is Snap.image.data then "correct" else "mismatched"
-				console.log "Images at #{Snap.stage.frame} are #{match}."
+			if Snap.stage.frame is Snap.stage.testPlan?.lastFrame
+				message = if Snap.missed > 0 then "test plan failed" else "test plan passed"
+				$rootScope.$broadcast message
+				return
+			if (expected = Snap.stage.testPlan?[Snap.stage.frame])
+				if typeof expected is "function"
+					expected()
+				else
+					Snap.snap()
+					if expected isnt Snap.image.data
+						Snap.missed++
 
 	Object.defineProperty Snap, 'testPlan',
 		get: ->

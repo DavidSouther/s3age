@@ -59,9 +59,6 @@ testing.directive "stage", stage = ->
 		</label>
 		<div class="clear-label">
 			<div class="scroll">
-				<div class="navbar">
-					<button ng-click="printTestPlan()" class="btn btn-block navbar-btn">Print Test Plan</button>
-				</div>
 				<ul class="snapshot-list">
 					<li ng-repeat="shot in Snapshot.shots" class="snapshot-thumb">
 						<label>Frame</label><input value="{{shot.frame}}" auto-select />:<br />

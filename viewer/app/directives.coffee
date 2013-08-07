@@ -8,7 +8,7 @@ testing.directive "testingViewports", testingViewports = ->
 			<div class='scroll'>
 				<div class='center-502'>
 					<iframe id='viewer'
-						ng-src='../../examples/{{test.path}}'
+						ng-src='{{examples}}/{{test.path}}'
 					></iframe>
 				</div>
 			</div>
@@ -41,10 +41,12 @@ testing.directive "testingViewports", testingViewports = ->
 				$scope.Snapshot.tick()
 				$scope.$apply()
 			$scope.stage.scene.add watcher
+			$scope.$apply()
 
 	controller: ($scope, snapshot)->
 		$scope.stage = null
 		$scope.Snapshot = snapshot
+		$scope.examples = "./examples"
 
 testing.directive "stage", stage = ->
 	restrict: 'AE'

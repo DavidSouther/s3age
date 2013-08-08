@@ -24,6 +24,7 @@ testing.factory "snapshot", ($rootScope)->
 			canvas[1].toDataURL()
 
 	Snap =
+		autoAdvance: true
 		missed: 0
 		disabled: true
 		image:
@@ -45,7 +46,7 @@ testing.factory "snapshot", ($rootScope)->
 
 		tick: ->
 			return if Snap.disabled
-			if Snap.stage.frame is Snap.stage.testPlan?.lastFrame
+			if Snap.stage.frame is Snap.stage.testPlan?.lastFrame and Snap.autoAdvance
 				message = if Snap.missed > 0 then "test plan failed" else "test plan passed"
 				$rootScope.$broadcast message
 				return

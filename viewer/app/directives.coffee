@@ -4,7 +4,13 @@ testing.directive "imageCompare", imageCompare = ->
 		over: "=over"
 		under: "=under"
 	template:'
-		<div class="compare">
+		<div class="compare"
+			style="
+				width: {{width}}px;
+				height: {{height}}px;
+				margin: 0 auto;
+			"
+		>
 			<div class="under">
 				<img ng-src="{{under}}" />
 			</div>
@@ -22,6 +28,7 @@ testing.directive "imageCompare", imageCompare = ->
 	'
 	link: ($scope, $elem, $attr)->
 		$scope.height = $attr.height
+		$scope.width = $attr.width || $attr.height
 		slider = angular.element $elem[0].querySelector ".compare"
 		Slide = (e)->
 			e.preventDefault()
@@ -70,7 +77,7 @@ testing.directive "imageOptions", imageOptions = ->
 			<div ng-show="view == \'compare\'">
 				<image-compare
 					over="image.data" under="image.reference"
-					height="500" width="500"></image-compare>
+					height="500"></image-compare>
 			</div>
 		</div>
 	'
@@ -146,10 +153,15 @@ testing.directive "stage", stage = ->
 								\'alert-success\': shot.image.reference == shot.image.data
 							}"
 						>
-							<image-compare
-								over="shot.image.data" under="shot.image.reference"
-								height="150"></image-compare>
-							<img ng-src="{{shot.image.delta}}" ng-show="shot.image.delta" />
+							<div><a ng-click="view = \'compare\'">Comare</a> <a ng-click="view = \'diff\'">Difference</a> <a ng-show="view" ng-click="view = \'\'">Close</a></div>
+							<div ng-show="view == \'compare\'">
+								<image-compare
+									over="shot.image.data" under="shot.image.reference"
+									height="150"></image-compare>
+							</div>
+							<div ng-show="view == \'diff\'">
+								<img ng-src="{{shot.image.delta}}" />
+							</div>
 						</div>
 						<br />
 						<label>Base64</label><textarea rows="1" auto-select>{{shot.image.data}}</textarea>

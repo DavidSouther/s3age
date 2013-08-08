@@ -51,9 +51,13 @@
 					<div class="nav navbar">
 						<button
 							ng-click="Snapshot.snap()"
-							class="btn navbar-btn btn-block btn-default"
+							class="btn navbar-btn btn-default"
 							ng-disabled="Snapshot.disabled"
 						>Snapshot</button>
+						<label>
+							<input type="checkbox" ng-model="Snapshot.autoAdvance" />
+							Auto Advance
+						</label>
 					</div>
 				</div>
 			</div>

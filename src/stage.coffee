@@ -36,7 +36,7 @@ class S3age
 		@onResize()
 		@clicks()
 
-		if defaults.debug
+		if @defaults.debug
 			@debug = S3age.Debug @, defaults.statistics, defaults.inspector
 			@testPlan = defaults.testPlan
 

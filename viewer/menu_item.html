@@ -1,0 +1,12 @@
+<label class='tree-toggle nav-header untested' ng-click="closed = !closed" ng-show="path.length">{{path}}</label>
+<ul class='nav nav-list tree' ng-hide="closed">
+	<li ng-repeat="(name, test) in tests.tests">
+		<a href='#!{{test.path}}' class='example btn btn-block' ng-class="{
+			'btn-warning': test.warn,
+			'btn-success': test.pass,
+			'btn-danger': test.fail,
+			'btn-info': test.path == Test.current.path
+		}">{{name}}</a>
+	</li>
+	<li ng-repeat="(path, tests) in tests.children"  ng-include="'menu_item.html'"></li>
+</ul>

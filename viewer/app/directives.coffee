@@ -1,62 +1,31 @@
 testing.directive "imageCompare", imageCompare = ->
 	restrict: 'AE'
 	scope:
-		image: "=image"
-	template: '
-		<div class="image-compare">
-			<ul class="nav nav-tabs" style="margin-bottom: 20px">
-				<li
-					ng-class="{
-						active: view == \'image\'
-					}"
-				><a ng-click="view = \'image\'">Image</a></li>
-				<li
-					ng-class="{
-						active: view == \'reference\'
-					}"
-				><a ng-click="view = \'reference\'">Reference</a></li>
-				<li
-					ng-class="{
-						active: view == \'compare\'
-					}"
-				><a ng-click="view = \'compare\'">Compare</a></li>
-				<li
-					ng-class="{
-						active: view == \'diff\'
-					}"
-				><a ng-click="view = \'diff\'">Difference</a></li>
-
-			</ul>
-			<div ng-show="view == \'image\'">
-				<img ng-src="{{image.data}}" />
+		over: "=over"
+		under: "=under"
+	template:'
+		<div class="compare">
+			<div class="under">
+				<img ng-src="{{under}}" />
 			</div>
-			<div ng-show="view == \'reference\'">
-				<img ng-src="{{image.reference}}" />
-			</div>
-			<div ng-show="view == \'diff\'">
-				<img ng-src="{{image.delta}}" />
-			</div>
-			<div class="compare" ng-show="view == \'compare\'">
-				<div class="under">
-					<img ng-src="{{image.data}}"/>
-				</div>
-				<div class="slider"
-				 	style="
-						width: {{percent}}%;
-						overflow: hidden;
-						margin-top: -500px;
-						border-right: 1px solid #428bca;
-					"
-				>
-					<img ng-src="{{image.reference}}" />
-				</div>
+			<div class="slider"
+				style="
+					width: {{percent}}%;
+					overflow: hidden;
+					margin-top: -{{height}}px;
+					border-right: 1px solid #428bca;
+				"
+			>
+				<img ng-src="{{over}}" />
 			</div>
 		</div>
 	'
-	link: ($scope, $elem)->
+	link: ($scope, $elem, $attr)->
+		$scope.height = $attr.height
 		slider = angular.element $elem[0].querySelector ".compare"
 		Slide = (e)->
 			e.preventDefault()
+			return if not $scope.under
 			$scope.$apply ->
 				percent = 100 * e.offsetX / slider[0].clientWidth
 				$scope.percent = percent
@@ -69,8 +38,44 @@ testing.directive "imageCompare", imageCompare = ->
 		angular.element(document).bind 'mouseup', -> button = false
 
 	controller: ($scope)->
+		$scope.percent = if $scope.under then 65 else 100
+
+testing.directive "imageOptions", imageOptions = ->
+	restrict: 'AE'
+	scope:
+		image: "=image"
+	template: '
+		<div class="image-options">
+			<ul class="nav nav-tabs" style="margin-bottom: 20px">
+				<li ng-class="{ active: view == \'image\' }"
+				><a ng-click="view = \'image\'">Image</a></li>
+
+				<li ng-class="{ active: view == \'reference\' }"
+				><a ng-click="view = \'reference\'">Reference</a></li>
+				<li ng-class="{ active: view == \'compare\' }"
+				><a ng-click="view = \'compare\'">Compare</a></li>
+
+				<li ng-class="{ active: view == \'diff\' }"
+				><a ng-click="view = \'diff\'">Difference</a></li>
+			</ul>
+			<div ng-show="view == \'image\'">
+				<img ng-src="{{image.data}}" />
+			</div>
+			<div ng-show="view == \'reference\'">
+				<img ng-src="{{image.reference}}" />
+			</div>
+			<div ng-show="view == \'diff\'">
+				<img ng-src="{{image.delta}}" />
+			</div>
+			<div ng-show="view == \'compare\'">
+				<image-compare
+					over="image.data" under="image.reference"
+					height="500" width="500"></image-compare>
+			</div>
+		</div>
+	'
+	controller: ($scope)->
 		$scope.view = "image"
-		$scope.percent = 65
 
 testing.directive "testingViewports", testingViewports = ->
 	scope:
@@ -92,7 +97,7 @@ testing.directive "testingViewports", testingViewports = ->
 			<label class='title absolute'>Snapshot</label>
 			<div class='clear-label'>
 				<div class='scroll'>
-					<image-compare image='Snapshot.image'></image-compare>
+					<image-options image='Snapshot.image'></image-options>
 				</div>
 			</div>
 		</div>"
@@ -134,15 +139,16 @@ testing.directive "stage", stage = ->
 			<div class="scroll">
 				<ul class="snapshot-list">
 					<li ng-repeat="shot in Snapshot.shots" class="snapshot-thumb">
-						<label>Frame</label><input value="{{shot.frame}}" auto-select />:<br />
+						<label>Frame</label><input value="{{shot.image.frame}}" auto-select />:<br />
 						<div
 							ng-class="{
 								\'alert-danger\': shot.image.reference != shot.image.data,
 								\'alert-success\': shot.image.reference == shot.image.data
 							}"
 						>
-							<img ng-src="{{shot.image.data}}" />
-							<img ng-src="{{shot.image.reference}}" ng-show="shot.image.reference" />
+							<image-compare
+								over="shot.image.data" under="shot.image.reference"
+								height="150"></image-compare>
 							<img ng-src="{{shot.image.delta}}" ng-show="shot.image.delta" />
 						</div>
 						<br />

@@ -1,7 +1,9 @@
 testing.controller "testing", ($scope, testloader, $timeout, $location)->
+	flat = {}
 	ordered = []
 	order = (tests)->
 		recur = (tests)->
+			flat[test.path] = test for name, test of tests.tests
 			paths = (test.path for name, test of tests.tests)
 			ordered = ordered.concat _(paths).sort()
 			groups = _(tests.children).chain().keys().sort().value()
@@ -18,16 +20,10 @@ testing.controller "testing", ($scope, testloader, $timeout, $location)->
 
 		find:
 			test: (path = "")->
-				# Remove the posible ./ or /./ when looking up tests
-				path = path.replace /^\/?\.\//, ""
-				path = path.split "/"
-				test = path.pop()
-				base = $scope.tests
-				try
-					while part = path.shift()
-						base = base.children[part]
-					base.tests[test]
-				catch
+				console.log path
+				# Remove the posible leading /
+				path = path.replace /^\//, ""
+				flat[path] ||
 					name: "unknown"
 					path: ""
 

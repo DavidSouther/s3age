@@ -1,3 +1,77 @@
+testing.directive "imageCompare", imageCompare = ->
+	restrict: 'AE'
+	scope:
+		image: "=image"
+	template: '
+		<div class="image-compare">
+			<ul class="nav nav-tabs" style="margin-bottom: 20px">
+				<li
+					ng-class="{
+						active: view == \'image\'
+					}"
+				><a ng-click="view = \'image\'">Image</a></li>
+				<li
+					ng-class="{
+						active: view == \'reference\'
+					}"
+				><a ng-click="view = \'reference\'">Reference</a></li>
+				<li
+					ng-class="{
+						active: view == \'compare\'
+					}"
+				><a ng-click="view = \'compare\'">Compare</a></li>
+				<li
+					ng-class="{
+						active: view == \'diff\'
+					}"
+				><a ng-click="view = \'diff\'">Difference</a></li>
+
+			</ul>
+			<div ng-show="view == \'image\'">
+				<img ng-src="{{image.data}}" />
+			</div>
+			<div ng-show="view == \'reference\'">
+				<img ng-src="{{image.reference}}" />
+			</div>
+			<div ng-show="view == \'diff\'">
+				<img ng-src="{{image.delta}}" />
+			</div>
+			<div class="compare" ng-show="view == \'compare\'">
+				<div class="under">
+					<img ng-src="{{image.data}}"/>
+				</div>
+				<div class="slider"
+				 	style="
+						width: {{percent}}%;
+						overflow: hidden;
+						margin-top: -500px;
+						border-right: 1px solid #428bca;
+					"
+				>
+					<img ng-src="{{image.reference}}" />
+				</div>
+			</div>
+		</div>
+	'
+	link: ($scope, $elem)->
+		slider = angular.element $elem[0].querySelector ".compare"
+		Slide = (e)->
+			e.preventDefault()
+			$scope.$apply ->
+				percent = 100 * e.offsetX / slider[0].clientWidth
+				$scope.percent = percent
+		slider.bind "mousedown", Slide
+		slider.bind "mousemove", (e)-> Slide e if button
+
+		# Silly hacks
+		button = false
+		angular.element(document).bind 'mousedown', -> button = true
+		angular.element(document).bind 'mouseup', -> button = false
+
+	controller: ($scope)->
+		$scope.view = "image"
+		$scope.percent = 65
+
 testing.directive "testingViewports", testingViewports = ->
 	scope:
 		test: '=currentTest'
@@ -16,12 +90,9 @@ testing.directive "testingViewports", testingViewports = ->
 
 		<div class='well flush'>
 			<label class='title absolute'>Snapshot</label>
-			<div class='scroll'>
-				<div class='center-502'>
-					<img id='snapshot'
-						ng-src='{{Snapshot.image.data}}'
-						ng-style='{ \"background-color\": Snapshot.backgroundColor }'
-					/>
+			<div class='clear-label'>
+				<div class='scroll'>
+					<image-compare image='Snapshot.image'></image-compare>
 				</div>
 			</div>
 		</div>"
@@ -30,8 +101,11 @@ testing.directive "testingViewports", testingViewports = ->
 		$scope.iframe.bind "load", ->
 			wind = $scope.iframe[0].contentWindow
 
-			if not wind.stage
+			if not wind
 				console.error "Couldn't load #{$scope.test.path} correctly."
+				return
+			if not wind.stage
+				console.warn "Couldn't load #{$scope.test.path} with stage."
 				return
 
 			$scope.Snapshot.stage = $scope.stage = wind.stage
@@ -61,7 +135,17 @@ testing.directive "stage", stage = ->
 				<ul class="snapshot-list">
 					<li ng-repeat="shot in Snapshot.shots" class="snapshot-thumb">
 						<label>Frame</label><input value="{{shot.frame}}" auto-select />:<br />
-						<img ng-src="{{shot.image.data}}" /><br />
+						<div
+							ng-class="{
+								\'alert-danger\': shot.image.reference != shot.image.data,
+								\'alert-success\': shot.image.reference == shot.image.data
+							}"
+						>
+							<img ng-src="{{shot.image.data}}" />
+							<img ng-src="{{shot.image.reference}}" ng-show="shot.image.reference" />
+							<img ng-src="{{shot.image.delta}}" ng-show="shot.image.delta" />
+						</div>
+						<br />
 						<label>Base64</label><textarea rows="1" auto-select>{{shot.image.data}}</textarea>
 					</li>
 				</ul>

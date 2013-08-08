@@ -1,50 +1,33 @@
 {
 	"tests": [],
 	"children": {
-		"s3age": {
-			"tests": {
-				"01 Blender": {
-					"path": "../src/examples/01_blender_factory.html"
-				},
-				"02 Trees": {
-					"path": "../src/examples/02_trees.html"
-				},
-				"03 Forest": {
-					"path": "../src/examples/03_forest.html"
-				},
-				"04 Spinning": {
-					"path": "../src/examples/04_forest_spinning.html"
-				}
-			},
-			"children": {}
-		},
-		"webgl": {
+		"examples/webgl": {
 			"tests": {
 				"lod.html": {
-					"path": "./examples/webgl/lod.html"
+					"path": "examples/webgl/lod.html"
 				},
 				"postprocessing.html": {
-					"path": "./examples/webgl/postprocessing.html"
+					"path": "examples/webgl/postprocessing.html"
 				},
 				"postprocessing2.html": {
-					"path": "./examples/webgl/postprocessing2.html"
+					"path": "examples/webgl/postprocessing2.html"
 				},
 				"trails.html": {
-					"path": "./examples/webgl/trails.html"
+					"path": "examples/webgl/trails.html"
 				}
 			},
 			"children": {
 				"materials": {
 					"tests": {
 						"lightmap.html": {
-							"path": "./examples/webgl/materials/lightmap.html"
+							"path": "examples/webgl/materials/lightmap.html"
 						}
 					},
 					"children": {
 						"texture": {
 							"tests": {
 								"anisotropy.html": {
-									"path": "./examples/webgl/materials/texture/anisotropy.html"
+									"path": "examples/webgl/materials/texture/anisotropy.html"
 								}
 							},
 							"children": {}
@@ -54,7 +37,7 @@
 				"interactive": {
 					"tests": {
 						"cubes.html": {
-							"path": "./examples/webgl/interactive/cubes.html"
+							"path": "examples/webgl/interactive/cubes.html"
 						}
 					},
 					"children": {}
@@ -62,7 +45,7 @@
 				"geometry": {
 					"tests": {
 						"cube.html": {
-							"path": "./examples/webgl/geometry/cube.html"
+							"path": "examples/webgl/geometry/cube.html"
 						}
 					},
 					"children": {}
@@ -70,7 +53,7 @@
 				"custom": {
 					"tests": {
 						"attributes.html": {
-							"path": "./examples/webgl/custom/attributes.html"
+							"path": "examples/webgl/custom/attributes.html"
 						}
 					},
 					"children": {}
@@ -81,7 +64,7 @@
 						"skinning": {
 							"tests": {
 								"morph.html": {
-									"path": "./examples/webgl/animation/skinning/morph.html"
+									"path": "examples/webgl/animation/skinning/morph.html"
 								}
 							},
 							"children": {}

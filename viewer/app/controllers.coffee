@@ -20,7 +20,6 @@ testing.controller "testing", ($scope, testloader, $timeout, $location)->
 
 		find:
 			test: (path = "")->
-				console.log path
 				# Remove the posible leading /
 				path = path.replace /^\//, ""
 				flat[path] ||
@@ -59,6 +58,7 @@ testing.controller "testing", ($scope, testloader, $timeout, $location)->
 	.success (data)->
 		$scope.tests = data
 		order $scope.tests if $scope.tests
+		console.log $location.path(), ordered[0]
 		load()
 
 	$scope.$watch (->$location.path()), (->load())

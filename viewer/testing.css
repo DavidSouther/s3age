@@ -51,6 +51,10 @@ label.title.margin-reset {
 	padding-top: 33px;
 }
 
+.nav.nav-tabs > li > a {
+	cursor: pointer;
+}
+
 #menu-well {
 	position: absolute;
 	top: 60px;
@@ -59,7 +63,6 @@ label.title.margin-reset {
 	right: 85%;
 }
 
-/*#menu-well .scroll {*/
 .clear-label > .scroll {
 	padding-right: 10px;
 }
@@ -142,8 +145,21 @@ label.title.margin-reset {
 .snapshot-thumb img {
 	width: 150px;
 	height: 150px;
+	background: url("transparency_background.png") repeat;
 }
 
 .snapshot-thumb input {
 	width: 92px;
+}
+
+.image-compare > div {
+	background: url("transparency_background.png") repeat;
+}
+
+.progress-bar {
+	-webkit-transition: none;
+	-moz-transition: none;
+	-ms-transition: none;
+	-o-transition: none;
+	transition: none;
 }

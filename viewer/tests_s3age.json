@@ -1,0 +1,77 @@
+{
+	"tests": [],
+	"children": {
+		"webgl": {
+			"tests": {
+				"lod.html": {
+					"path": "./webgl/lod.html"
+				},
+				"postprocessing.html": {
+					"path": "./webgl/postprocessing.html"
+				},
+				"postprocessing2.html": {
+					"path": "./webgl/postprocessing2.html"
+				},
+				"trails.html": {
+					"path": "./webgl/trails.html"
+				}
+			},
+			"children": {
+				"materials": {
+					"tests": {
+						"lightmap.html": {
+							"path": "./webgl/materials/lightmap.html"
+						}
+					},
+					"children": {
+						"texture": {
+							"tests": {
+								"anisotropy.html": {
+									"path": "./webgl/materials/texture/anisotropy.html"
+								}
+							},
+							"children": {}
+						}
+					}
+				},
+				"interactive": {
+					"tests": {
+						"cubes.html": {
+							"path": "./webgl/interactive/cubes.html"
+						}
+					},
+					"children": {}
+				},
+				"geometry": {
+					"tests": {
+						"cube.html": {
+							"path": "./webgl/geometry/cube.html"
+						}
+					},
+					"children": {}
+				},
+				"custom": {
+					"tests": {
+						"attributes.html": {
+							"path": "./webgl/custom/attributes.html"
+						}
+					},
+					"children": {}
+				},
+				"animation": {
+					"tests": {},
+					"children": {
+						"skinning": {
+							"tests": {
+								"morph.html": {
+									"path": "./webgl/animation/skinning/morph.html"
+								}
+							},
+							"children": {}
+						}
+					}
+				}
+			}
+		}
+	}
+}

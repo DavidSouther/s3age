@@ -7,11 +7,9 @@
 	<script src="libs/angular.js"></script>
 	<script src="libs/underscore-min.js"></script>
 	<script src="libs/coffee-script.js"></script>
-	<script src="libs/context_blender.js"></script>
 	<link rel="stylesheet" href="testing.css"></script>
 
 	<script type="text/coffeescript" src="app/app.coffee"></script>
-	<script type="text/coffeescript" src="app/filters.coffee"></script>
 	<script type="text/coffeescript" src="app/services.coffee"></script>
 	<script type="text/coffeescript" src="app/directives.coffee"></script>
 	<script type="text/coffeescript" src="app/controllers.coffee"></script>
@@ -21,45 +19,32 @@
 </head>
 <body>
 	<div ng-controller="testing">
-		<div class="navbar navbar-inverse navbar-fixed-top">
-			<div class="container">
-				<a class="navbar-brand" href="#">Three.js Test Suite</a>
+
+		<div id="scripting-well" class="well">
+			<label class="title welled margin-reset">Controls</label>
+			<div class="controls">
+				<div class="nav navbar">
+					<button ng-click="Test.previous()" class="btn btn-primary navbar-btn pull-left">Previous</button>
+					<button ng-click="Test.next()" class="btn btn-primary navbar-btn pull-right">Next</button>
+				</div>
+				<div class="nav navbar">
+					<button ng-click="Test.pass()" class="btn btn-success navbar-btn pull-left">Pass</button>
+					<button ng-click="Test.fail()" class="btn btn-danger navbar-btn pull-right">Fail</button>
+				</div>
 			</div>
 		</div>
 
-		<div id="menu-well" class="well flush-right" ng-controller="menu">
+		<div id="menu-well" class="well flush-right">
 			<label class="title welled absolute">Menu</label>
 			<div class="clear-label">
+
 				<div class="scroll" ng-include src="'menu_item.html'"></div>
+
 			</div>
 		</div>
 
 		<div id="viewports" class="renderers" testing-viewports current-test="Test.current"></div>
 
-		<div ng-controller="controls">
-			<div id="scripting-well" class="well">
-				<label class="title welled margin-reset">Controls</label>
-				<div class="controls">
-					<div class="nav navbar">
-						<button ng-click="Test.previous()" class="btn btn-primary navbar-btn pull-left">Previous</button>
-						<button ng-click="Test.next()" class="btn btn-primary navbar-btn pull-right">Next</button>
-					</div>
-					<div class="nav navbar">
-						<button ng-click="Test.pass()" class="btn btn-success navbar-btn pull-left">Pass</button>
-						<button ng-click="Test.fail()" class="btn btn-danger navbar-btn pull-right">Fail</button>
-					</div>
-					<div class="nav navbar">
-						<button
-							ng-click="Snapshot.snap()"
-							class="btn navbar-btn btn-block btn-default"
-							ng-disabled="Snapshot.disabled"
-						>Snapshot</button>
-					</div>
-				</div>
-			</div>
-
-			<div id="snapshots-well" class="well flush-right" stage="Snapshot.stage"></div>
-		</div>
 	</div>
 </body>
 </html>

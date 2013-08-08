@@ -2,6 +2,7 @@ testing.controller "testing", ($scope, testloader, $timeout, $location)->
 	flat = {}
 	ordered = []
 	order = (tests)->
+		# A bunch of underscoreing to move the tree structure into easy-to-use flat lists
 		recur = (tests)->
 			flat[test.path] = test for name, test of tests.tests
 			paths = (test.path for name, test of tests.tests)
@@ -10,7 +11,7 @@ testing.controller "testing", ($scope, testloader, $timeout, $location)->
 			recur tests.children[group] for group in groups
 		recur tests
 
-	Test = $scope.Test =
+	$scope.Test = Test =
 		tests:
 			tests: {}
 			children: {}
@@ -20,7 +21,7 @@ testing.controller "testing", ($scope, testloader, $timeout, $location)->
 
 		find:
 			test: (path = "")->
-				# Remove the posible leading /
+				# Remove the posible leading /, sometimes added by the $location service
 				path = path.replace /^\//, ""
 				flat[path] ||
 					name: "unknown"
@@ -32,6 +33,7 @@ testing.controller "testing", ($scope, testloader, $timeout, $location)->
 			next = ordered[(index + i) % ordered.length]
 			next = Test.find.test next
 			$location.path next.path
+
 		previous: ->
 			Test.move -1
 		next: ->
@@ -49,25 +51,15 @@ testing.controller "testing", ($scope, testloader, $timeout, $location)->
 		fail: ->
 			Test.set false, true
 
+	$scope.$watch (->$location.path()), (->load())
 	load = ->
+		# May or may not be triggered during the lifecycle.
 		$timeout -> $scope.$apply ->
 			Test.current = Test.find.test $location.path()
-			$scope.$broadcast "test loaded"
 
 	testloader.get("tests_s3age.json")
 	.success (data)->
 		$scope.tests = data
 		order $scope.tests if $scope.tests
-		console.log $location.path(), ordered[0]
 		load()
 
-	$scope.$watch (->$location.path()), (->load())
-	$scope.$on "test plan failed", ->
-		Test.fail()
-	$scope.$on "test plan passed", ->
-		Test.pass()
-
-testing.controller "menu", ($scope, $http)->
-
-testing.controller "controls", ($scope, snapshot)->
-	$scope.Snapshot = snapshot

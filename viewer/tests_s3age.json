@@ -1,7 +1,7 @@
 {
 	"tests": [],
 	"children": {
-		"examples/webgl": {
+		"webgl": {
 			"tests": {
 				"lod.html": {
 					"path": "examples/webgl/lod.html"
@@ -72,6 +72,17 @@
 					}
 				}
 			}
+		},
+		"bad": {
+			"tests": {
+				"No Stage": {
+					"path": "examples"
+				},
+				"No File": {
+					"path": "file/not/found.html"
+				}
+			},
+			"children": {}
 		}
 	}
 }

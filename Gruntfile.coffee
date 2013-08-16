@@ -17,13 +17,15 @@ module.exports = (grunt)->
 						'src/renderer.coffee'
 						'src/click.coffee'
 						'src/loader.coffee'
-					],
+					]
 					'lib/s3age.controls.js': [
-						'src/extend.coffee'
-						'src/controls/Controls.coffee'
-						'src/controls/Trackball.coffee'
-						'src/controls/Chase.coffee'
-						'src/controls/FirstPerson.coffee'
+						'src/controls.coffee'
+						'src/controls/sphere.coffee'
+					]
+					'lib/s3age.extras.js': [
+						'src/extras/extras.coffee'
+						'src/extras/globe.coffee'
+						'src/extras/math.coffee'
 					]
 				options:
 					bare: true

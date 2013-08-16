@@ -26,6 +26,7 @@ class S3age
 		@effects @defaults.effects # Todo move to a helper composer class.
 		@dress @defaults.scene if @defaults.scene?
 		@controls = @defaults.controls
+		if typeof @controls is "function" then @controls = new @controls @scene, @
 
 		# attach the render-supplied DOM element
 		@_container = document.querySelector selector

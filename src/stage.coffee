@@ -31,6 +31,7 @@ class S3age
 		# attach the render-supplied DOM element
 		@_container = document.querySelector selector
 		@_container.appendChild @renderer.domElement
+		@_container.focus()
 
 		# Set up a window resize handler
 		window.addEventListener 'resize', => @onResize()

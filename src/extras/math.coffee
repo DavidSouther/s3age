@@ -10,8 +10,7 @@ THREE.Vector3::fromSpherical = (theta, phi, r)->
 
 	@
 
-window.Damper = (@friction = 0.1)->
-	@position = 0
+window.Damper = (@position = 0, @friction = 0.1)->
 	@velocity = 0
 	@
 Damper::step = ->
@@ -23,7 +22,7 @@ Damper::push = (acceleration)->
 	@velocity += acceleration
 	@
 
-window.BoundDamper = (@min = -1, @max = 1, @friction = 0.1)->
+window.BoundDamper = (@min = -1, @max = 1, @position = 0, @friction = 0.1)->
 	Damper.call @
 	@delta = (@max - @min) * 2
 	@

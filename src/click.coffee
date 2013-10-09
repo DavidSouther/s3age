@@ -1,3 +1,6 @@
+###
+Static function to attach a click handler to the stage.
+###
 S3age.Click = (element, stage)->
 	down = 0
 
@@ -23,4 +26,7 @@ S3age.Click = (element, stage)->
 	for event, handler of events
 		element.addEventListener event, handler, false
 
+###
+Public, editable constant to change Click behavior.
+###
 S3age.Click.CLICK_TIMEOUT = 100

@@ -1,7 +1,6 @@
 S3age.Extras.Globe = (@radius = 1)->
 	THREE.Object3D.apply @, [].slice.call arguments, 1
 	THREE.Object3D::add.call @, @tilted = new THREE.Object3D()
-	@tilted.rotation = 
 	@rotation.z = Math.toRad 23.4
 
 	@speed = rotation: 0.001
@@ -13,7 +12,7 @@ S3age.Extras.Globe = (@radius = 1)->
 S3age.Extras.Globe:: = Object.create THREE.Object3D::
 
 S3age.Extras.Globe::update = (clock)->
-	@tilted.rotation.y += @speed.rotation
+	# @tilted.rotation.y += @speed.rotation
 	m.update? clock for m in @markers.updateable
 
 S3age.Extras.Globe::addMarker = (marker, lat, lon)->

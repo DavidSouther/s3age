@@ -3,6 +3,19 @@
  @author alteredq / http://alteredqualia.com/
  @author mr.doob / http://mrdoob.com/
 ###
+###
+The Detector looks for several required libraries. If they are not present,
+it provides a mechanism to show a relevant error message on the page.
+
+Usually, use it somewhere in the main entry point of the WebGL app as
+
+```
+if (!Detector.webgl) {
+	Detector.WebGLErrorMessage.add(document.getElementById("myWebGLErrorDiv"));
+}
+
+```
+###
 do ->
 	# Expose the detector
 	window.Detector = Detector =

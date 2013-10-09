@@ -1,3 +1,15 @@
+###
+Extension around a Three perspective camera. Rebinds underlying properties to
+automatically update the camera's projection matrix whenever set.
+
+@param stage {S3age} to get pertinant sizing information at runtime.
+@param defaults {Object} with default values:
+	fov: {float} field of view, defaults to 45
+	near: {float} near clipping plane, defaults to 1
+	far: {float} far clipping plane, defaults to 1000
+	position: {Vector3|Array[3]} starting position, defaults to <0, 0, 0>
+	lookAt: {Array[3]} initial camera target, defaults along [0, 0, 1]
+###
 S3age.Camera = (stage, defaults = {})->
 	
 	fov  = defaults.fov  or 45

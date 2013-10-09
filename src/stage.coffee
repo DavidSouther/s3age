@@ -4,11 +4,30 @@ class S3age
 	Insert the renderer's domElement as a child of the first element returned by selector,
 	or directly under body if no selector is used.
 
-	@param {selector} string css selector to append dom element. Default: "body"
+	@param selector {string} css selector to append dom element. Default: "body"
+	@param defaults {Object} containing variety of default parameters
+		renderer: {Object} options to be passed to the S3age.renderer
+		camera: {Object} options to be passed to the S3age.camera
+		scene: {Object} with the initial scene description
+			children: {Array} of THREE.Object3D to add to the scene
+			lights: {Array} of THREE.*Light to add to the scene
+		controls: {Object} hook for attaching scene controls. If it has an update function, the
+			update function will get called every frame with the clock. If the passed controls
+			is a function, it will be treated as a constructor, and passed the scene and the
+			dom element instantiation. The returned instance should have an `update()` function.
+		effects: {Array} of THREE EffectsComposer passes. Requires EffectsComposer to be loaded.
+			Forces the S3age into effects mode, which always runs the given effects between an
+			initial RenderPass and final CopyShader that renders to screen.
+		inspector: {boolean} whether to expose the S3age for Three.js inspector, default: false
+		statistics: {boolean} to create and attach statistics graph, default: true
+		debug: {boolean} to start in debug mode, capturing every frame to a stored back buffer.
+			Default: false || window.TESTING
+		autostart: {boolean} whether to immediately begin render loop. When false, the S3age will
+			not begin rendering until calling `s3age.start()`. Default: true
 	###
 	constructor: (selector = "body", @defaults = {})->
 		# Return immediately if rendering is unavailable.
-		if not Detector?.webgl then Detector.WebGLErrorMessage.add()
+		if not Detector?.webgl then return Detector.WebGLErrorMessage.add()
 
 		# Set default params
 		@default @defaults
@@ -25,8 +44,10 @@ class S3age
 		@renderer = S3age.Renderer @, @defaults.renderer
 		@effects @defaults.effects # Todo move to a helper composer class.
 		@dress @defaults.scene if @defaults.scene?
+
+		# TODO This needs further consideration for alt library interops. 
 		@controls = @defaults.controls
-		if typeof @controls is "function" then @controls = new @controls @scene, @
+		if typeof @controls is "function" then @controls = new @controls @scene, @_container
 
 		# attach the render-supplied DOM element
 		@_container = document.querySelector selector
@@ -99,7 +120,8 @@ class S3age
 		@
 
 	###
-	Prepare click handlers
+	Prepare click handlers. The click handler finds any object that would intersect the click
+	ray, and if it has an `onclick` event, calls that event with the click information.
 	###
 	clicks: ->
 		# Register a click handler that implicitly calls onclick of any clicked object.
@@ -112,7 +134,13 @@ class S3age
 		@
 
 	###
-	Prepare an effects loop.
+	Prepare an effects loop. The page will need to have included the effects composer
+	scritps, and the RenderPass and ShaderPass scripts.
+
+	@param passes {array} instantiated Effects passes, which will be run in order.
+		Implicitly, the first step is a RenderPass, which gets the scene and the camera.
+		The last step is a CopyShader ShaderPass, moving the final image to the screen.
+		Any other passes will be run with the output from the previous pass, in order.
 	###
 	effects: (passes)->
 		if not THREE.EffectComposer

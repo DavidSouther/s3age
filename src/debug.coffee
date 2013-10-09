@@ -1,3 +1,7 @@
+###
+Debug handlers. Attaches stats, exposes to inspector, and provides
+snapshot handling.
+###
 S3age.Debug = (s3age, stats = false, expose = false)->
 	do ->
 		###

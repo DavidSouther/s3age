@@ -16,7 +16,13 @@ if (!Detector.webgl) {
 
 ```
 ###
-do ->
+window.Detector =
+	canvas: false
+	workers: false
+	fileapi: false
+	webgl: false
+
+$ ->
 	# Expose the detector
 	window.Detector = Detector =
 		# Check for various APIs

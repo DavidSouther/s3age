@@ -17,6 +17,7 @@ S3age.Camera = (stage, defaults = {})->
 	far  = defaults.far  or 1000
 
 	camera = new THREE.PerspectiveCamera fov, stage.aspect, near, far
+	camera.name = "camera_#{camera.id}"
 
 	camera.position = defaults.position if defaults.position instanceof THREE.Vector3
 	camera.position.fromArray defaults.position if defaults.position instanceof Array

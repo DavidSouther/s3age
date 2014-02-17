@@ -1,10 +1,10 @@
-S3age.Controls.Sphere = (scene, stage)->
-	element = stage?._container || document
-	# element = document
-	bind = (e, f, t = false) -> element.addEventListener e, f, t
-	unbind = (e, f, t = false) -> element.removeEventListener e, f, t
+ZERO = {position: new THREE.Vector3(0, 0, 0)}
+S3age.Controls.Sphere = (stage, @target = ZERO)->
+	element = stage._container
 
-	ZERO = new THREE.Vector3 0, 0, 0
+	bind = (e, f, t = false) -> document.addEventListener e, f, t
+	unbind = (e, f, t = false) -> document.removeEventListener e, f, t
+
 	DAMPING =
 		MOUSE:
 			ZOOM:
@@ -49,22 +49,29 @@ S3age.Controls.Sphere = (scene, stage)->
 		bind "keydown", (e)->
 			switch e.keyCode
 				#WSAD
-				when 87 then spin.up.push -DAMPING.KEY.SPIN.UP
-				when 83 then spin.up.push  DAMPING.KEY.SPIN.UP
-				when 65 then spin.left.push -DAMPING.KEY.SPIN.LEFT
-				when 68 then spin.left.push  DAMPING.KEY.SPIN.LEFT
+				when 38, 87 then spin.up.push -DAMPING.KEY.SPIN.UP
+				when 40, 83 then spin.up.push  DAMPING.KEY.SPIN.UP
+				when 37, 65 then spin.left.push  DAMPING.KEY.SPIN.LEFT
+				when 39, 68 then spin.left.push -DAMPING.KEY.SPIN.LEFT
 				# QE
 				when 69 then zoom.push  DAMPING.KEY.ZOOM.TRUCK
 				when 81 then zoom.push -DAMPING.KEY.ZOOM.TRUCK
 
 	camera = stage.camera
-	@target = ZERO
-	@update = ->
+	frame = 0
+	@update = =>
 		d.step() for d in [spin.left, spin.up, r, zoom]
-		camera.fov = zoom.position
+		# camera.fov = zoom.position
 		phi = spin.up.position * Math.PI
 		theta = spin.left.position * Math.PI
-		camera.position.fromSpherical theta, phi, r.position
-		camera.position.add @.target
-		camera.lookAt @target
+		boundingRadius = @target.boundingSphere?.radius || 1
+		camera.position.fromSpherical theta, phi, r.position * boundingRadius
+		camera.position.add @target.position
+		camera.lookAt @target.position
+
+		diff = camera.position.clone().sub(@target.position)
+
+		mod = frame++ % (60 * 10)
+		if mod is 60 or mod is 61
+			console.log camera.rotation, camera.rotation.length(), camera.position, @target.position
 	@
